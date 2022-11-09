@@ -15,15 +15,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PostDto {
     
-	private int postId;
+	
 	private String title;
 	private String content;
 	private String imageName;
 	private Date addedDate;
 	
-	private Category category;
+	private CategoryDto category;
 	
-	private User user;
+	private UserDto user;
 	
 	
 }
