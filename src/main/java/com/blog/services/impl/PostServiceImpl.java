@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.blog.entiries.Category;
 import com.blog.entiries.Post;
+import com.blog.entiries.PostResponse;
 import com.blog.entiries.User;
 import com.blog.exception.ResourceNotFoundException;
 import com.blog.payloads.PostDto;
@@ -68,16 +69,23 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public List<PostDto> getAllPost(Integer pageNumber, Integer pageSize) {
+	public PostResponse getAllPost(Integer pageNumber, Integer pageSize) {
 	
 		Pageable pageable= PageRequest.of(pageNumber,pageSize);
 
 		Page<Post> pagePost = this.postRepo.findAll(pageable);
 		List<Post> posts=pagePost.getContent();
-		List<PostDto> catDtos = posts.stream().map((p) -> this.modalMapper.map(p, PostDto.class))
+		List<PostDto> postDtos = posts.stream().map((p) -> this.modalMapper.map(p, PostDto.class))
 				.collect(Collectors.toList());
+		
+		PostResponse postResponse=new PostResponse();
+		postResponse.setContent(postDtos);
+		postResponse.setPageNumber(pagePost.getNumber());
+		postResponse.setPageSize(pagePost.getSize());
+		postResponse.setTotalElement(pagePost.getTotalElements());
+		postResponse.setLastPage(pagePost.isLast());
 
-		return catDtos;
+		return postResponse;
 	}
 
 	@Override
