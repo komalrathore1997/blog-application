@@ -1,8 +1,6 @@
-package com.blog.controller;
+package com.blog.payloads;
 
 import java.util.List;
-
-import com.blog.payloads.PostDto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
