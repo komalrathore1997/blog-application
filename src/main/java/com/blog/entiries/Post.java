@@ -28,7 +28,7 @@ public class Post {
 
 	private int postId;
 	
-	@Column(name="Post_title",length=100,nullable=false)
+	@Column(name="Post_title")
 	
 	private String title;
 	
@@ -44,5 +44,7 @@ public class Post {
 	
 	@ManyToOne
 	private User user;
+	
+	
 	
 }

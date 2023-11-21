@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.blog.entiries.Category;
@@ -75,16 +76,22 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public PostResponse getAllPost(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
-		
-		
-		 Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
-	                : Sort.by(sortBy).descending();
-			
+	public PostResponse getAllPost(Integer pageNumber, Integer pageSize, String sortBy, String sortDir, String sayt) {
+
+		Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+				: Sort.by(sortBy).descending();
 
 		Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
-		Page<Post> pagePost = postRepo.findAll(pageable);
+		Specification<Post> searchSpec = PostSpecification.searchByKeyword(sayt);
+
+		Page<Post> pagePost;
+		if (searchSpec == null) {
+			pagePost = postRepo.findAll(pageable);
+		} else {
+			pagePost = postRepo.findAll(searchSpec, pageable);
+
+		}
 		List<Post> posts = pagePost.getContent();
 		List<PostDto> postDtos = posts.stream().map((p) -> this.modalMapper.map(p, PostDto.class))
 				.collect(Collectors.toList());
